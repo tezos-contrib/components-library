@@ -1,0 +1,45 @@
+{
+  "name": "@tezos-contrib/react-wallet-provider",
+  "version": "1.0.0",
+  "description": "Provider for tezos wallet for react apps",
+  "keywords": [
+    "react",
+    "tezos",
+    "wallet",
+    "beacon"
+  ],
+  "author": "Shubhendu Shekhar <shubhendu@shekhar.eu>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "dist/react-wallet-provider.umd.js",
+  "module": "dist/react-wallet-provider.es.js",
+  "typings": "types/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "clean": "rimraf dist",
+    "build": "yarn clean && rollup -c rollup.config.ts",
+    "compile": "tsc --jsx react-jsx --declaration src/index.ts"
+  },
+  "peerDependencies": {
+    "react": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "react-dom": "^17.0.2"
+  },
+  "dependencies": {
+    "@airgap/beacon-sdk": "^2.2.4",
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "rollup": "^2.45.2",
+    "rollup-plugin-typescript2": "^0.30.0"
+  }
+}
