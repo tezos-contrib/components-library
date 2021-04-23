@@ -1,7 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
-
+import analyze from 'rollup-plugin-analyzer';
 import pkg from './package.json';
 
 export default {
@@ -20,5 +20,6 @@ export default {
       useTsconfigDeclarationDir: true,
     }),
     commonjs(),
+    analyze(),
   ],
 };

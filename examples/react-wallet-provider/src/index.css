@@ -11,3 +11,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.button {
+  font-family: 'Nunito Sans',
+  'Helvetica Neue',
+  Helvetica,
+  Arial,
+  sans-serif;
+  font-weight: 700;
+  border: 0;
+  border-radius: 3em;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1;
+  font-size: 16px;
+  padding: 12px 24px;
+  color: white;
+}
+
+.button--primary {
+  background-color: #1ea7fd;
+}
+
+.button--secondary {
+  background-color: rgb(218, 204, 15);
+}

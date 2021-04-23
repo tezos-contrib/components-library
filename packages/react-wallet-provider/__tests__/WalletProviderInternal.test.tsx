@@ -26,7 +26,7 @@ it('should try to connect to wallet', async () => {
   await waitFor(() => {
     connectWallet(mockClient as any);
   });
-  expect(mockGetActiveAccount).toHaveBeenCalledTimes(1);
+  expect(mockGetActiveAccount).toHaveBeenCalledTimes(2);
   expect(mockRequestPermissions).toHaveBeenCalled();
 });
 

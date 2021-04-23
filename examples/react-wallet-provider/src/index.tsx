@@ -7,7 +7,7 @@ import { WalletProvider } from '@tezos-contrib/react-wallet-provider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <WalletProvider name="my-example-app">
+    <WalletProvider name="my-example-app" clientType="beacon">
       <App />
     </WalletProvider>
   </React.StrictMode>,

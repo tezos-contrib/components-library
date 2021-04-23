@@ -6,11 +6,19 @@ import {
   PermissionScope,
   AccountInfo,
 } from '@airgap/beacon-sdk';
+import { BeaconWallet } from '@taquito/beacon-wallet';
 
 type Network = keyof typeof NetworkType;
+type Client = DAppClient | BeaconWallet;
+type ClientType = 'beacon' | 'taquito';
+interface ContextType {
+  client: Client;
+  clientType: ClientType;
+}
 
 export interface WalletProviderProps extends Omit<DAppClientOptions, 'preferredNetwork'> {
   network?: Network;
+  clientType?: ClientType;
 }
 
 interface WalletResult {
@@ -21,14 +29,30 @@ interface WalletResult {
   disconnect: () => Promise<void>;
 }
 
-const DAppContext = React.createContext<DAppClient | undefined>(undefined);
+const DAppContext = React.createContext<ContextType | undefined>(undefined);
 
 export const useDappClient = (): DAppClient => {
-  const dappClient = React.useContext(DAppContext);
-  if (!dappClient) {
+  const context = React.useContext(DAppContext);
+  if (!context) {
     throw new Error('No DAppClient set, use WalletProvider to create and set one');
   }
+  const { client, clientType } = context;
+  const dappClient: DAppClient =
+    clientType === 'taquito' ? (client as BeaconWallet).client : (client as DAppClient);
   return dappClient;
+};
+
+export const useBeaconWallet = (): BeaconWallet => {
+  const context = React.useContext(DAppContext);
+  if (!context) {
+    throw new Error('No BeaconWallet set, use WalletProvider to create and set one');
+  }
+  if (context.clientType === 'beacon') {
+    throw new Error(
+      `Provider was initialized with clientType: ${context.clientType}. Initialize provider with clientType: taquito`,
+    );
+  }
+  return context.client as BeaconWallet;
 };
 
 export const connectWallet = async (
@@ -39,7 +63,7 @@ export const connectWallet = async (
   activeAccount?: AccountInfo | null,
 ): Promise<AccountInfo | undefined> => {
   const connectTo = network ? NetworkType[network] : client.preferredNetwork ?? NetworkType.MAINNET;
-  const account = activeAccount ?? (await client.getActiveAccount());
+  let account = activeAccount ?? (await client.getActiveAccount());
   const opsRequest = account
     ? account.scopes.includes(PermissionScope.OPERATION_REQUEST)
     : undefined;
@@ -48,6 +72,7 @@ export const connectWallet = async (
     await client.requestPermissions({
       network: { type: connectTo, name: networkName, rpcUrl },
     });
+    account = await client.getActiveAccount();
   }
   localStorage.setItem('provider:wallet-connected', 'true');
   return account;
@@ -107,9 +132,24 @@ export const useWallet = (
   };
 };
 
-export const WalletProvider: React.FC<WalletProviderProps> = ({ children, network, ...rest }) => {
-  const [client] = useState<DAppClient | undefined>(
-    new DAppClient({ ...rest, preferredNetwork: network ? NetworkType[network] : undefined }),
+export const WalletProvider: React.FC<WalletProviderProps> = ({
+  children,
+  clientType = 'beacon',
+  network,
+  ...rest
+}) => {
+  const options = { ...rest, preferredNetwork: network ? NetworkType[network] : undefined };
+  const [client] = useState<Client>(
+    clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options),
   );
-  return <DAppContext.Provider value={client}>{children}</DAppContext.Provider>;
+  return (
+    <DAppContext.Provider
+      value={{
+        client,
+        clientType,
+      }}
+    >
+      {children}
+    </DAppContext.Provider>
+  );
 };
