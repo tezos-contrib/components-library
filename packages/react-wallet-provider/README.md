@@ -10,7 +10,7 @@ import { WalletProvider, useWallet } from '@tezos-contrib/react-wallet-provider'
 export default function App() {
   return (
     <WalletProvider name="my-example-app" clientType="beacon">
-      <App />
+      <Example />
     </WalletProvider>
   );
 }
@@ -18,17 +18,11 @@ export default function App() {
 function Example() {
   const { connected, activeAccount, connect, disconnect } = useWallet();
   return (
-    <div className="App">
-      <header className="App-header">
-        {!connected && (
-          <button className="button button--primary" onClick={connect}>
-            Connect
-          </button>
-        )}
+    <div>
+      <header>
+        {!connected && <button onClick={connect}>Connect</button>}
         {connected && (
-          <button className="button button--secondary" onClick={disconnect}>
-            Disconnect from {activeAccount?.address}
-          </button>
+          <button onClick={disconnect}>Disconnect from {activeAccount?.address}</button>
         )}
       </header>
     </div>
