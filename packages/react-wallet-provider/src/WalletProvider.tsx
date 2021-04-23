@@ -31,6 +31,10 @@ interface WalletResult {
 
 const DAppContext = React.createContext<ContextType | undefined>(undefined);
 
+/**
+ * React hook to get the instance of DAppClient (from @airgap/beacon-sdk)
+ * @returns DAppClient
+ */
 export const useDappClient = (): DAppClient => {
   const context = React.useContext(DAppContext);
   if (!context) {
@@ -42,6 +46,10 @@ export const useDappClient = (): DAppClient => {
   return dappClient;
 };
 
+/**
+ * React hook to get the instance of BeaconWallet (from @taquito/beacon-wallet)
+ * @returns BeaconWallet
+ */
 export const useBeaconWallet = (): BeaconWallet => {
   const context = React.useContext(DAppContext);
   if (!context) {
@@ -55,6 +63,15 @@ export const useBeaconWallet = (): BeaconWallet => {
   return context.client as BeaconWallet;
 };
 
+/**
+ * Connect to the wallet
+ * @param client DAppClient
+ * @param network Network (optional)
+ * @param rpcUrl string (optional)
+ * @param networkName string (optional)
+ * @param activeAccount AccountInfo (optional)
+ * @returns Promise<AccountInfo | undefined>
+ */
 export const connectWallet = async (
   client: DAppClient,
   network?: Network,
@@ -78,11 +95,22 @@ export const connectWallet = async (
   return account;
 };
 
+/**
+ * Disconnect from the wallet
+ * @param client DAppClient
+ */
 export const disconnectWallet = async (client: DAppClient): Promise<void> => {
   await client.destroy();
   localStorage.removeItem('provider:wallet-connected');
 };
 
+/**
+ * Sets up the wallet and returns
+ * @param network Network (optional)
+ * @param rpcUrl string (optional)
+ * @param networkName string (optional)
+ * @returns WalletResult
+ */
 export const useWallet = (
   network?: Network,
   rpcUrl?: string,
@@ -132,6 +160,9 @@ export const useWallet = (
   };
 };
 
+/**
+ * WalletProvider
+ */
 export const WalletProvider: React.FC<WalletProviderProps> = ({
   children,
   clientType = 'beacon',

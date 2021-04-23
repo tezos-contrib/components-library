@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Example @tezos-contrib/react-wallet-provider
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an example CRA for `@tezos-contrib/react-wallet-provider`
 
 ## Available Scripts
 
