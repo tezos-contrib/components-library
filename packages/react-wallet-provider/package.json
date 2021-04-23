@@ -25,7 +25,8 @@
     "test": "jest --collectCoverage",
     "clean": "rimraf dist",
     "build": "yarn clean && rollup -c rollup.config.ts",
-    "compile": "tsc --jsx react-jsx --declaration src/index.ts"
+    "compile": "tsc --jsx react-jsx --declaration src/index.ts",
+    "prepare": "yarn build"
   },
   "peerDependencies": {
     "@airgap/beacon-sdk": "^2.2.4",
@@ -50,7 +51,6 @@
     "rollup": "^2.45.2",
     "rollup-plugin-analyzer": "^4.0.0",
     "rollup-plugin-typescript2": "^0.30.0",
-    "rollup-plugin-visualizer": "^5.4.1",
     "ts-jest": "^26.5.5"
   },
   "jest": {

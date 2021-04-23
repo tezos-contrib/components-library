@@ -9,6 +9,7 @@
     "clean": "lerna clean --yes",
     "commit": "git-cz",
     "precommit": "lerna run --concurrency 1 --stream precommit",
+    "prepare": "lerna run prepare --stream --concurrency=1",
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap"
   },
