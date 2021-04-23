@@ -31,6 +31,33 @@ export const useDappClient = (): DAppClient => {
   return dappClient;
 };
 
+export const connectWallet = async (
+  client: DAppClient,
+  network?: Network,
+  rpcUrl?: string,
+  networkName?: string,
+  activeAccount?: AccountInfo | null,
+): Promise<AccountInfo | undefined> => {
+  const connectTo = network ? NetworkType[network] : client.preferredNetwork ?? NetworkType.MAINNET;
+  const account = activeAccount ?? (await client.getActiveAccount());
+  const opsRequest = account
+    ? account.scopes.includes(PermissionScope.OPERATION_REQUEST)
+    : undefined;
+  const signRequest = account ? account.scopes.includes(PermissionScope.SIGN) : undefined;
+  if (!opsRequest || !signRequest) {
+    await client.requestPermissions({
+      network: { type: connectTo, name: networkName, rpcUrl },
+    });
+  }
+  localStorage.setItem('provider:wallet-connected', 'true');
+  return account;
+};
+
+export const disconnectWallet = async (client: DAppClient): Promise<void> => {
+  await client.destroy();
+  localStorage.removeItem('provider:wallet-connected');
+};
+
 export const useWallet = (
   network?: Network,
   rpcUrl?: string,
@@ -51,34 +78,22 @@ export const useWallet = (
     });
   }, []);
 
-  const connect = async () => {
-    const connectTo = network
-      ? NetworkType[network]
-      : client.preferredNetwork ?? NetworkType.MAINNET;
-    const account = state.activeAccount ?? (await client.getActiveAccount());
-    const opsRequest = account
-      ? account.scopes.includes(PermissionScope.OPERATION_REQUEST)
-      : undefined;
-    const signRequest = account ? account.scopes.includes(PermissionScope.SIGN) : undefined;
-    if (!opsRequest || !signRequest) {
-      await client.requestPermissions({
-        network: { type: connectTo, name: networkName, rpcUrl },
+  const connect = React.useCallback(async () => {
+    const account = await connectWallet(client, network, rpcUrl, networkName, state.activeAccount);
+    if (account) {
+      setState({
+        connected: true,
+        activeAccount: account,
       });
     }
-    localStorage.setItem('provider:wallet-connected', 'true');
-    setState({
-      connected: true,
-      activeAccount: account,
-    });
-  };
-  const disconnect = async () => {
-    await client.destroy();
-    localStorage.removeItem('provider:wallet-connected');
+  }, [client, state.activeAccount, network, rpcUrl, networkName]);
+  const disconnect = React.useCallback(async () => {
+    await disconnectWallet(client);
     setState({
       connected: false,
       activeAccount: null,
     });
-  };
+  }, [client]);
 
   React.useEffect(() => {
     state.connected && connect();

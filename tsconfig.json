@@ -21,11 +21,13 @@
     "jsx": "react-jsx",
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": "packages",
+    "downlevelIteration": true,
+    "paths": {
+      "@tezos-contrib/react-wallet-provider": [
+        "react-wallet-provider/src/index.ts"
+      ]
+    }
   },
-  "include": [
-    "packages/**/lib",
-    "packages/**/src",
-    "packages/**/__tests__"
-  ]
 }
