@@ -2,6 +2,9 @@
 
 > A react provider for Dapps to easily setup connection to Beacon/Taquito wallets
 
+![npm (scoped)](https://img.shields.io/npm/v/@tezos-contrib/react-wallet-provider?style=for-the-badge)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@tezos-contrib/react-wallet-provider?style=for-the-badge)
+
 ## Installation
 
 - Npm
