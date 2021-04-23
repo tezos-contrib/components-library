@@ -2,6 +2,20 @@
 
 > A react provider for Dapps to easily setup connection to Beacon/Taquito wallets
 
+## Installation
+
+- Npm
+
+```bash
+npm install --save @tezos-contrib/react-wallet-provider @airgap/beacon-sdk @taquito/beacon-wallet
+```
+
+- Yarn
+
+```bash
+yarn add @tezos-contrib/react-wallet-provider @airgap/beacon-sdk @taquito/beacon-wallet
+```
+
 ## Example usage
 
 ```jsx
