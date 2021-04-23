@@ -1,6 +1,18 @@
-# components-library
+# Tezos components library
+
 A components library for dapps built on tezos
 
+![Twitter Follow](https://img.shields.io/twitter/follow/tezos?style=social)
+![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/tezos?style=social)
+[![Chat on Telegram](https://img.shields.io/badge/Chat%20on-Telegram-blue.svg)](https://t.me/tezosplatform)
+
+## Components
+
+### React
+
+- [x] Wallet Provider
+- [ ] Address Component
+- [ ]
 
 # License
 
