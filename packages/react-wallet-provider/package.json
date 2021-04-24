@@ -16,13 +16,13 @@
   "license": "MIT",
   "main": "dist/react-wallet-provider.umd.js",
   "module": "dist/react-wallet-provider.es.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/WalletProvider.d.ts",
   "directories": {
     "lib": "src",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "scripts": {
     "test": "jest --collectCoverage",
