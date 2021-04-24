@@ -16,7 +16,7 @@
   "license": "MIT",
   "main": "dist/react-wallet-provider.umd.js",
   "module": "dist/react-wallet-provider.es.js",
-  "typings": "dist/WalletProvider.d.ts",
+  "typings": "dist/index.d.ts",
   "directories": {
     "lib": "src",
     "test": "__tests__"
