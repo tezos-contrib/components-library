@@ -1,6 +1,6 @@
 {
   "name": "@tezos-contrib/react-wallet-provider",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Provider for tezos wallet for react apps",
   "publishConfig": {
     "access": "public"
