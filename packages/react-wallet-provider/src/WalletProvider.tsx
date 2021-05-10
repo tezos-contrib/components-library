@@ -16,7 +16,7 @@ interface ContextType {
   clientType: ClientType;
 }
 
-export interface WalletProviderProps extends Omit<DAppClientOptions, 'preferredNetwork'> {
+interface WalletProviderProps extends Omit<DAppClientOptions, 'preferredNetwork'> {
   network?: Network;
   clientType?: ClientType;
 }
@@ -35,7 +35,7 @@ const DAppContext = React.createContext<ContextType | undefined>(undefined);
  * React hook to get the instance of DAppClient (from @airgap/beacon-sdk)
  * @returns DAppClient
  */
-export const useDappClient = (): DAppClient => {
+const useDappClient = (): DAppClient => {
   const context = React.useContext(DAppContext);
   if (!context) {
     throw new Error('No DAppClient set, use WalletProvider to create and set one');
@@ -50,7 +50,7 @@ export const useDappClient = (): DAppClient => {
  * React hook to get the instance of BeaconWallet (from @taquito/beacon-wallet)
  * @returns BeaconWallet
  */
-export const useBeaconWallet = (): BeaconWallet => {
+const useBeaconWallet = (): BeaconWallet => {
   const context = React.useContext(DAppContext);
   if (!context) {
     throw new Error('No BeaconWallet set, use WalletProvider to create and set one');
@@ -111,11 +111,7 @@ export const disconnectWallet = async (client: DAppClient): Promise<void> => {
  * @param networkName string (optional)
  * @returns WalletResult
  */
-export const useWallet = (
-  network?: Network,
-  rpcUrl?: string,
-  networkName?: string,
-): WalletResult => {
+const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): WalletResult => {
   const client = useDappClient();
   const [state, setState] = React.useState<{
     connected: boolean;
@@ -163,7 +159,7 @@ export const useWallet = (
 /**
  * WalletProvider
  */
-export const WalletProvider: React.FC<WalletProviderProps> = ({
+const WalletProvider: React.FC<WalletProviderProps> = ({
   children,
   clientType = 'beacon',
   network,
@@ -184,3 +180,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({
     </DAppContext.Provider>
   );
 };
+
+export { WalletProvider, useBeaconWallet, useDappClient, useWallet };
+export type { WalletProviderProps, WalletResult };

@@ -16,7 +16,8 @@ export default {
   plugins: [
     resolve(),
     typescript({
-      useTsconfigDeclarationDir: true,
+      clean: true,
+      rollupCommonJSResolveHack: false,
     }),
     commonjs(),
   ],

@@ -1,11 +1,28 @@
-# `@tezos-contrib/react-wallet-provider`
+# `@tz-contrib/react-wallet-provider`
 
 > A react provider for Dapps to easily setup connection to Beacon/Taquito wallets
+
+![npm (scoped)](https://img.shields.io/npm/v/@tz-contrib/react-wallet-provider?style=for-the-badge)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@tz-contrib/react-wallet-provider?style=for-the-badge)
+
+## Installation
+
+- Npm
+
+```bash
+npm install --save @tz-contrib/react-wallet-provider @airgap/beacon-sdk @taquito/beacon-wallet
+```
+
+- Yarn
+
+```bash
+yarn add @tz-contrib/react-wallet-provider @airgap/beacon-sdk @taquito/beacon-wallet
+```
 
 ## Example usage
 
 ```jsx
-import { WalletProvider, useWallet } from '@tezos-contrib/react-wallet-provider';
+import { WalletProvider, useWallet } from '@tz-contrib/react-wallet-provider';
 
 export default function App() {
   return (

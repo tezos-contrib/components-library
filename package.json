@@ -11,7 +11,7 @@
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "prepare": "lerna run prepare --stream --concurrency=1",
     "lerna": "lerna",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap --ignore example-*"
   },
   "devDependencies": {
     "lerna": "^4.0.0",
