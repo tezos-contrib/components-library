@@ -1,5 +1,5 @@
 {
-  "name": "@tezos-contrib/react-wallet-provider",
+  "name": "@tz-contrib/react-wallet-provider",
   "version": "1.0.0-alpha.3",
   "description": "Provider for tezos wallet for react apps",
   "publishConfig": {
@@ -12,7 +12,11 @@
     "beacon"
   ],
   "author": "Shubhendu Shekhar <shubhendu@shekhar.eu>",
-  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tz-contrib/components-library.git",
+    "directory": "packages/react-wallet-provider"
+  },
   "license": "MIT",
   "main": "dist/react-wallet-provider.umd.js",
   "module": "dist/react-wallet-provider.es.js",
@@ -32,15 +36,15 @@
     "prepare": "yarn build"
   },
   "peerDependencies": {
-    "@airgap/beacon-sdk": "^2.2.4",
-    "@taquito/beacon-wallet": "^8.1.1",
+    "@airgap/beacon-sdk": "^2.2.6",
+    "@taquito/beacon-wallet": "^9.0.0",
     "react": ">=16.8.0"
   },
   "devDependencies": {
-    "@airgap/beacon-sdk": "^2.2.4",
+    "@airgap/beacon-sdk": "^2.2.6",
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
-    "@taquito/beacon-wallet": "^8.1.1",
+    "@taquito/beacon-wallet": "^9.0.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/react-hooks": "^5.1.2",

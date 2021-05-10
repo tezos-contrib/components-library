@@ -1,5 +1,5 @@
 import './App.css';
-import { useWallet } from '@tezos-contrib/react-wallet-provider';
+import { useWallet } from '@tz-contrib/react-wallet-provider';
 
 function App() {
   const { connected, activeAccount, connect, disconnect } = useWallet();
