@@ -2,20 +2,7 @@
 # yarn lockfile v1
 
 
-"@airgap/beacon-sdk@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-2.2.4.tgz#580fc062eb4b29049174466b0301ac2ac8523f92"
-  integrity sha512-2TRZTOCCA9Dz0mWjZu0RKxTLVYdL5KkVpg+ULG02CVXKS/l048T2vJ2VkxGmZkkhxzJ3ER6tYBUiM8+TBRkERA==
-  dependencies:
-    "@types/chrome" "0.0.115"
-    "@types/libsodium-wrappers" "0.7.7"
-    axios "0.21.1"
-    bignumber.js "9.0.0"
-    bs58check "2.1.2"
-    libsodium-wrappers "0.7.8"
-    qrcode-generator "1.4.4"
-
-"@airgap/beacon-sdk@^2.2.5", "@airgap/beacon-sdk@^2.2.6":
+"@airgap/beacon-sdk@^2.2.5", "@airgap/beacon-sdk@^2.2.6", "@airgap/beacon-sdk@^2.2.7":
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-2.2.7.tgz#8dcf041f9c98f2648d0d0a76698027717873ece3"
   integrity sha512-07tEUuRWjjX+eRWyX4r9b5TSwUvJZntiuUHLuaVFkZMa1E1BUuLKFB7z5KN9wBSzmUP6viASi3F2/5OFnomNkQ==

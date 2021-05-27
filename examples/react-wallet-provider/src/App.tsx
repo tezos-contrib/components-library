@@ -1,8 +1,13 @@
 import './App.css';
 import { useWallet } from '@tz-contrib/react-wallet-provider';
 
+const AddressComponent: React.FC = () => {
+  const { activeAccount } = useWallet();
+  return <>{activeAccount?.address}</>;
+};
+
 function App() {
-  const { connected, activeAccount, connect, disconnect } = useWallet();
+  const { connected, connect, disconnect } = useWallet();
   return (
     <div className="App">
       <header className="App-header">
@@ -13,7 +18,7 @@ function App() {
         )}
         {connected && (
           <button className="button button--secondary" onClick={disconnect}>
-            Disconnect from {activeAccount?.address}
+            Disconnect from <AddressComponent />
           </button>
         )}
       </header>

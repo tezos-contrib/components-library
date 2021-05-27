@@ -12,7 +12,7 @@ type Network = keyof typeof NetworkType;
 type Client = DAppClient | BeaconWallet;
 type ClientType = 'beacon' | 'taquito';
 interface ContextType {
-  client: Client;
+  client: Client | undefined;
   clientType: ClientType;
   resetClient: () => void;
 }
@@ -23,7 +23,7 @@ interface WalletProviderProps extends Omit<DAppClientOptions, 'preferredNetwork'
 }
 
 interface WalletResult {
-  client: DAppClient;
+  client: DAppClient | undefined;
   activeAccount?: AccountInfo | null;
   connected: boolean;
   connect: () => Promise<void>;
@@ -36,12 +36,15 @@ const DAppContext = React.createContext<ContextType | undefined>(undefined);
  * React hook to get the instance of DAppClient (from @airgap/beacon-sdk)
  * @returns DAppClient
  */
-const useDappClient = (): DAppClient => {
+const useDappClient = (): DAppClient | undefined => {
   const context = React.useContext(DAppContext);
   if (!context) {
     throw new Error('No DAppClient set, use WalletProvider to create and set one');
   }
   const { client, clientType } = context;
+  if (typeof client === 'undefined') {
+    return client;
+  }
   const dappClient: DAppClient =
     clientType === 'taquito' ? (client as BeaconWallet).client : (client as DAppClient);
   return dappClient;
@@ -142,7 +145,8 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
   }, []);
 
   const connect = React.useCallback(async () => {
-    const account = await connectWallet(client, network, rpcUrl, networkName, state.activeAccount);
+    const account =
+      client && (await connectWallet(client, network, rpcUrl, networkName, state.activeAccount));
     if (account) {
       setState({
         connected: true,
@@ -151,7 +155,7 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
     }
   }, [client, state.activeAccount, network, rpcUrl, networkName]);
   const disconnect = React.useCallback(async () => {
-    await disconnectWallet(client);
+    client && (await disconnectWallet(client));
     reset();
     setState({
       connected: false,
@@ -181,13 +185,16 @@ const WalletProvider: React.FC<WalletProviderProps> = ({
   ...rest
 }) => {
   const options = { ...rest, preferredNetwork: network ? NetworkType[network] : undefined };
-  const [client, setClient] = React.useState<Client>(
-    clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options),
-  );
+  const [client, setClient] = React.useState<Client | undefined>(undefined);
   const setNewClient = () => {
     const newClient = clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options);
     setClient(newClient);
   };
+  React.useEffect(() => {
+    if (typeof client === 'undefined') {
+      setNewClient();
+    }
+  }, [client]);
   return (
     <DAppContext.Provider
       value={{
