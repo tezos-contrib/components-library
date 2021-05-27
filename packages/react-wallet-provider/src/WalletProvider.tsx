@@ -144,7 +144,7 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
     });
   }, []);
 
-  const connect = React.useCallback(async () => {
+  const connect = async () => {
     const account =
       client && (await connectWallet(client, network, rpcUrl, networkName, state.activeAccount));
     if (account) {
@@ -153,15 +153,15 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
         activeAccount: account,
       });
     }
-  }, [client, state.activeAccount, network, rpcUrl, networkName]);
-  const disconnect = React.useCallback(async () => {
+  };
+  const disconnect = async () => {
     client && (await disconnectWallet(client));
     reset();
     setState({
       connected: false,
       activeAccount: null,
     });
-  }, [client]);
+  };
 
   React.useEffect(() => {
     state.connected && connect();
