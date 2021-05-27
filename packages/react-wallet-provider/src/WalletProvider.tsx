@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   DAppClient,
   NetworkType,
@@ -14,6 +14,7 @@ type ClientType = 'beacon' | 'taquito';
 interface ContextType {
   client: Client;
   clientType: ClientType;
+  resetClient: () => void;
 }
 
 interface WalletProviderProps extends Omit<DAppClientOptions, 'preferredNetwork'> {
@@ -44,6 +45,18 @@ const useDappClient = (): DAppClient => {
   const dappClient: DAppClient =
     clientType === 'taquito' ? (client as BeaconWallet).client : (client as DAppClient);
   return dappClient;
+};
+
+/**
+ * React hook to get reset client method from provider
+ */
+const useResetClient = (): ContextType['resetClient'] => {
+  const context = React.useContext(DAppContext);
+  if (!context) {
+    throw new Error('No DAppClient set, use WalletProvider to create and set one');
+  }
+  const { resetClient } = context;
+  return resetClient;
 };
 
 /**
@@ -113,6 +126,7 @@ export const disconnectWallet = async (client: DAppClient): Promise<void> => {
  */
 const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): WalletResult => {
   const client = useDappClient();
+  const reset = useResetClient();
   const [state, setState] = React.useState<{
     connected: boolean;
     activeAccount?: AccountInfo | null;
@@ -138,6 +152,7 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
   }, [client, state.activeAccount, network, rpcUrl, networkName]);
   const disconnect = React.useCallback(async () => {
     await disconnectWallet(client);
+    reset();
     setState({
       connected: false,
       activeAccount: null,
@@ -166,14 +181,19 @@ const WalletProvider: React.FC<WalletProviderProps> = ({
   ...rest
 }) => {
   const options = { ...rest, preferredNetwork: network ? NetworkType[network] : undefined };
-  const [client] = useState<Client>(
+  const [client, setClient] = React.useState<Client>(
     clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options),
   );
+  const setNewClient = () => {
+    const newClient = clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options);
+    setClient(newClient);
+  };
   return (
     <DAppContext.Provider
       value={{
         client,
         clientType,
+        resetClient: setNewClient,
       }}
     >
       {children}
