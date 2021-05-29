@@ -106,8 +106,9 @@ export const connectWallet = async (
       network: { type: connectTo, name: networkName, rpcUrl },
     });
     account = await client.getActiveAccount();
+    localStorage.setItem('provider:wallet-connected', 'true');
   }
-  localStorage.setItem('provider:wallet-connected', 'true');
+
   return account;
 };
 
@@ -116,8 +117,8 @@ export const connectWallet = async (
  * @param client DAppClient
  */
 export const disconnectWallet = async (client: DAppClient): Promise<void> => {
-  await client.destroy();
   localStorage.removeItem('provider:wallet-connected');
+  await client.destroy();
 };
 
 /**
@@ -130,48 +131,43 @@ export const disconnectWallet = async (client: DAppClient): Promise<void> => {
 const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): WalletResult => {
   const client = useDappClient();
   const reset = useResetClient();
-  const [state, setState] = React.useState<{
-    connected: boolean;
-    activeAccount?: AccountInfo | null;
-  }>({
-    connected: false,
-    activeAccount: null,
-  });
-
+  const [connected, setConnected] = React.useState(false);
+  const [accountInfo, setAccountInfo] = React.useState<AccountInfo | undefined>(undefined);
   React.useEffect(() => {
-    setState({
-      connected: localStorage.getItem('provider:wallet-connected') === 'true',
-    });
-  }, []);
+    const getAccountInfo = async () => {
+      const activeAccount = await client?.getActiveAccount();
+      setAccountInfo(activeAccount);
+    };
+    getAccountInfo();
+  }, [connected, client]);
 
-  const connect = async () => {
+  const connect = React.useCallback(async () => {
     const account =
-      client && (await connectWallet(client, network, rpcUrl, networkName, state.activeAccount));
+      client && (await connectWallet(client, network, rpcUrl, networkName, accountInfo));
     if (account) {
-      setState({
-        connected: true,
-        activeAccount: account,
-      });
+      setConnected(true);
     }
-  };
-  const disconnect = async () => {
-    client && (await disconnectWallet(client));
-    reset();
-    setState({
-      connected: false,
-      activeAccount: null,
-    });
-  };
+  }, [accountInfo, client, network, networkName, rpcUrl]);
+  const disconnect = React.useCallback(async () => {
+    if (client) {
+      await disconnectWallet(client);
+      reset();
+      setConnected(false);
+    }
+  }, [client, reset, connected]);
 
   React.useEffect(() => {
-    state.connected && connect();
-  }, [state.connected]);
+    if (connected) {
+      connect();
+    }
+  }, []);
 
   return {
     client,
     connect,
     disconnect,
-    ...state,
+    activeAccount: accountInfo,
+    connected: localStorage.getItem('provider:wallet-connected') === 'true',
   };
 };
 
@@ -184,17 +180,20 @@ const WalletProvider: React.FC<WalletProviderProps> = ({
   network,
   ...rest
 }) => {
-  const options = { ...rest, preferredNetwork: network ? NetworkType[network] : undefined };
+  const options = React.useMemo(
+    () => ({ ...rest, preferredNetwork: network ? NetworkType[network] : undefined }),
+    [network, rest],
+  );
   const [client, setClient] = React.useState<Client | undefined>(undefined);
-  const setNewClient = () => {
+  const setNewClient = React.useCallback(() => {
     const newClient = clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options);
     setClient(newClient);
-  };
+  }, [clientType, options]);
   React.useEffect(() => {
     if (typeof client === 'undefined') {
       setNewClient();
     }
-  }, [client]);
+  }, [client, setNewClient]);
   return (
     <DAppContext.Provider
       value={{
