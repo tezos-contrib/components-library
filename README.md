@@ -10,9 +10,9 @@ A components library for dapps built on tezos
 
 ### React
 
-- [x] Wallet Provider
+- [x] React Wallet Provider
 - [ ] Address Component
-- [ ]
+- [ ] NFT Hooks
 
 # License
 
