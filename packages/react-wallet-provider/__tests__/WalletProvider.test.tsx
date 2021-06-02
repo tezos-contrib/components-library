@@ -7,7 +7,7 @@ test('should create DAppClient with only name', () => {
     <WalletProvider name="example">{children}</WalletProvider>
   );
   const { result } = renderHook(() => useDappClient(), { wrapper });
-  expect(result.current.name).toBe('example');
+  expect(result.current?.name).toBe('example');
 });
 
 test('should create DAppClient with only name and clientType', () => {
@@ -17,7 +17,7 @@ test('should create DAppClient with only name and clientType', () => {
     </WalletProvider>
   );
   const { result } = renderHook(() => useDappClient(), { wrapper });
-  expect(result.current.name).toBe('example');
+  expect(result.current?.name).toBe('example');
 });
 
 test('should create BeaconWallet', () => {
@@ -37,7 +37,7 @@ test('should create DAppClient with only name and network', () => {
     </WalletProvider>
   );
   const { result } = renderHook(() => useDappClient(), { wrapper });
-  expect(result.current.name).toBe('example');
+  expect(result.current?.name).toBe('example');
 });
 
 test('should return wallet details with useWallet', () => {

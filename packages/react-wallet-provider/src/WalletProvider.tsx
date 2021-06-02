@@ -15,6 +15,8 @@ interface ContextType {
   client: Client | undefined;
   clientType: ClientType;
   resetClient: () => void;
+  account?: AccountInfo;
+  setAccountInfo: (account?: AccountInfo) => void;
 }
 
 interface WalletProviderProps extends Omit<DAppClientOptions, 'preferredNetwork'> {
@@ -53,13 +55,13 @@ const useDappClient = (): DAppClient | undefined => {
 /**
  * React hook to get reset client method from provider
  */
-const useResetClient = (): ContextType['resetClient'] => {
+const useContextData = (): Pick<ContextType, 'resetClient' | 'setAccountInfo' | 'account'> => {
   const context = React.useContext(DAppContext);
   if (!context) {
     throw new Error('No DAppClient set, use WalletProvider to create and set one');
   }
-  const { resetClient } = context;
-  return resetClient;
+  const { resetClient, setAccountInfo, account } = context;
+  return { resetClient, setAccountInfo, account };
 };
 
 /**
@@ -130,31 +132,32 @@ export const disconnectWallet = async (client: DAppClient): Promise<void> => {
  */
 const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): WalletResult => {
   const client = useDappClient();
-  const reset = useResetClient();
+  const { resetClient, setAccountInfo, account } = useContextData();
   const [connected, setConnected] = React.useState(false);
-  const [accountInfo, setAccountInfo] = React.useState<AccountInfo | undefined>(undefined);
+  const getAccountInfo = React.useCallback(async () => {
+    const activeAccount = await client?.getActiveAccount();
+    setAccountInfo(activeAccount);
+  }, [client]);
   React.useEffect(() => {
-    const getAccountInfo = async () => {
-      const activeAccount = await client?.getActiveAccount();
-      setAccountInfo(activeAccount);
-    };
     getAccountInfo();
-  }, [connected, client]);
+  }, [connected, client, getAccountInfo]);
 
   const connect = React.useCallback(async () => {
-    const account =
-      client && (await connectWallet(client, network, rpcUrl, networkName, accountInfo));
-    if (account) {
-      setConnected(true);
+    if (client) {
+      const accountInfo = await connectWallet(client, network, rpcUrl, networkName, account);
+      if (accountInfo) {
+        setAccountInfo(accountInfo);
+        setConnected(true);
+      }
     }
-  }, [accountInfo, client, network, networkName, rpcUrl]);
+  }, [account, client, network, networkName, rpcUrl, setAccountInfo]);
   const disconnect = React.useCallback(async () => {
     if (client) {
       await disconnectWallet(client);
-      reset();
+      resetClient();
       setConnected(false);
     }
-  }, [client, reset, connected]);
+  }, [client, resetClient, connected]);
 
   React.useEffect(() => {
     if (connected) {
@@ -166,7 +169,7 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
     client,
     connect,
     disconnect,
-    activeAccount: accountInfo,
+    activeAccount: account,
     connected: localStorage.getItem('provider:wallet-connected') === 'true',
   };
 };
@@ -185,6 +188,7 @@ const WalletProvider: React.FC<WalletProviderProps> = ({
     [network, rest],
   );
   const [client, setClient] = React.useState<Client | undefined>(undefined);
+  const [account, setAccount] = React.useState<AccountInfo | undefined>(undefined);
   const setNewClient = React.useCallback(() => {
     const newClient = clientType === 'beacon' ? new DAppClient(options) : new BeaconWallet(options);
     setClient(newClient);
@@ -194,12 +198,17 @@ const WalletProvider: React.FC<WalletProviderProps> = ({
       setNewClient();
     }
   }, [client, setNewClient]);
+  const setAccountInfo = (info?: AccountInfo) => {
+    setAccount(info);
+  };
   return (
     <DAppContext.Provider
       value={{
         client,
         clientType,
         resetClient: setNewClient,
+        account,
+        setAccountInfo,
       }}
     >
       {children}
