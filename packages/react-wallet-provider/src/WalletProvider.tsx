@@ -28,7 +28,7 @@ interface WalletResult {
   client: DAppClient | undefined;
   activeAccount?: AccountInfo | null;
   connected: boolean;
-  connect: () => Promise<void>;
+  connect: () => Promise<AccountInfo | undefined>;
   disconnect: () => Promise<void>;
 }
 
@@ -142,14 +142,16 @@ const useWallet = (network?: Network, rpcUrl?: string, networkName?: string): Wa
     getAccountInfo();
   }, [connected, client, getAccountInfo]);
 
-  const connect = React.useCallback(async () => {
+  const connect = React.useCallback(async (): Promise<AccountInfo | undefined> => {
     if (client) {
       const accountInfo = await connectWallet(client, network, rpcUrl, networkName, account);
       if (accountInfo) {
         setAccountInfo(accountInfo);
         setConnected(true);
       }
+      return accountInfo;
     }
+    return undefined;
   }, [account, client, network, networkName, rpcUrl, setAccountInfo]);
   const disconnect = React.useCallback(async () => {
     if (client) {
@@ -183,7 +185,7 @@ const WalletProvider: React.FC<WalletProviderProps> = ({
   network,
   ...rest
 }) => {
-  const options = React.useMemo(
+  const options: DAppClientOptions = React.useMemo(
     () => ({ ...rest, preferredNetwork: network ? NetworkType[network] : undefined }),
     [network, rest],
   );
