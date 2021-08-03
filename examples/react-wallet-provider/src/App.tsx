@@ -1,5 +1,5 @@
 import './App.css';
-import { useWallet } from '@tz-contrib/react-wallet-provider';
+import { useWallet } from '@tezos-contrib/react-wallet-provider';
 
 const AddressComponent: React.FC = () => {
   const { activeAccount } = useWallet();

@@ -25,7 +25,7 @@
     "baseUrl": "packages",
     "downlevelIteration": true,
     "paths": {
-      "@tz-contrib/react-wallet-provider": [
+      "@tezos-contrib/react-wallet-provider": [
         "react-wallet-provider/src/index.ts"
       ]
     }

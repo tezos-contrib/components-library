@@ -1,6 +1,6 @@
-# Example @tz-contrib/react-wallet-provider
+# Example @tezos-contrib/react-wallet-provider
 
-This is an example CRA for [@tz-contrib/react-wallet-provider](https://github.com/tezos-contrib/components-library/tree/main/packages/react-wallet-provider).
+This is an example CRA for [@tezos-contrib/react-wallet-provider](https://github.com/tezos-contrib/components-library/tree/main/packages/react-wallet-provider).
 
 ## Available Scripts
 

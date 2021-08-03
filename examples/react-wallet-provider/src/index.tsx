@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { WalletProvider } from '@tz-contrib/react-wallet-provider';
+import { WalletProvider } from '@tezos-contrib/react-wallet-provider';
 
 ReactDOM.render(
   <React.StrictMode>
