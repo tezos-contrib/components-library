@@ -8,6 +8,9 @@
     "tezos",
     "blockchain"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Shubhendu Shekhar <shubhendu@shekhar.eu>",
   "repository": {
     "type": "git",
