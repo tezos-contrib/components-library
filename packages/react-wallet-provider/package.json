@@ -45,6 +45,8 @@
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@taquito/beacon-wallet": "^10.0.0",
+    "@taquito/taquito": "^10.1.0",
+    "@taquito/utils": "^10.1.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/react-hooks": "^7.0.0",
@@ -89,5 +91,9 @@
   },
   "ts-jest": {
     "isolatedModules": false
+  },
+  "dependencies": {
+    "@airgap/beacon-sdk": "^2.3.1",
+    "@tezos-contrib/nft-hooks": "^0.0.1"
   }
 }

@@ -1,35 +1,24 @@
 {
-  "name": "example-react-wallet-provider",
+  "name": "example-nft-hooks",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@airgap/beacon-sdk": "^2.2.7",
-    "@rollup/plugin-commonjs": "^18.0.0",
-    "@rollup/plugin-node-resolve": "^11.2.1",
-    "@taquito/beacon-wallet": "^9.0.1",
+    "@taquito/taquito": "^10.1.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@tezos-contrib/nft-hooks": "^0.0.1",
-    "@tezos-contrib/react-wallet-provider": "^1.0.0-alpha.5",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "jest": "26.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-    "rollup": "^2.45.2",
-    "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"
   },
-  "directories": {
-    "lib": "src"
-  },
-  "files": [
-    "lib"
-  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -53,9 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@taquito/taquito": "^10.1.0",
-    "@taquito/utils": "^10.1.0"
   }
 }

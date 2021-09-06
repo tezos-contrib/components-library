@@ -4,6 +4,7 @@ import {
   MichelCodecPacker,
   ContractAbstraction,
   ContractProvider,
+  MichelsonMap,
 } from '@taquito/taquito';
 
 export interface UseNFTOptions {
@@ -38,6 +39,10 @@ export interface UseNFTResult<TData = unknown, TError = unknown> {
   loading: boolean;
   data?: TData[];
   error?: TError;
+}
+
+interface NftMapValue {
+  token_info: MichelsonMap<string, string>;
 }
 
 const RPC_URL = 'https://mainnet.smartpy.io';
@@ -83,9 +88,12 @@ function bytes2Char(hex: string): string {
 
 const resolver = async <T,>(nfts: any, ipfsGateWay: string): Promise<T[]> => {
   const ipfsHash: string[] = [];
-  nfts.forEach((value: any) => {
+  nfts.forEach((value: NftMapValue) => {
     if (value && value.token_info) {
-      ipfsHash.push(bytes2Char(value.token_info.get('')).trim().substr(7));
+      const ipfsValue = value.token_info.get('');
+      if (ipfsValue) {
+        ipfsHash.push(bytes2Char(ipfsValue).trim().substr(7));
+      }
     }
   });
   return Promise.all(ipfsHash.map((k: string) => fetchIPFS<T>(k, ipfsGateWay)));
@@ -93,18 +101,18 @@ const resolver = async <T,>(nfts: any, ipfsGateWay: string): Promise<T[]> => {
 
 export function useNFT<TData = unknown, TError = unknown>(
   contract: string,
-  assets: number | string[],
+  assets: (number | string)[],
   options?: UseNFTOptions,
 ): UseNFTResult<TData, TError> {
   const { tezosToolkit, rpcURL, rpcPort, location, ipfsGateWay } = React.useMemo(
     () => ({ ...options, ...DEFAULT_OPTIONS }),
     [options],
   );
+
   const [state, setState] = React.useState<UseNFTResult<TData, TError>>({
-    loading: false,
-    data: undefined,
-    error: undefined,
+    loading: true,
   });
+
   const Tezos: TezosToolkit = React.useMemo(() => {
     if (tezosToolkit) {
       return tezosToolkit;
@@ -115,25 +123,28 @@ export function useNFT<TData = unknown, TError = unknown>(
   }, [tezosToolkit, rpcPort, rpcURL]);
 
   const ContractStorage = React.useMemo(async () => {
-    const resolvedContract = await initContract(Tezos, contract);
-    return resolvedContract.storage();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return initContract(Tezos, contract).then((resolvedContract: any) => {
+      return resolvedContract.storage();
+    });
   }, [contract, Tezos]);
 
   const fetchAssets = React.useCallback(async () => {
-    const resolvedContractStorage: any = await ContractStorage;
+    const resolvedContractStorage = await ContractStorage;
     const tokenData = await resolvedContractStorage[location].getMultipleValues(assets);
     try {
       const data = await resolver<TData>(tokenData, ipfsGateWay);
       setState({ loading: false, data, error: undefined });
-    } catch (error) {
-      setState({ loading: false, data: undefined, error });
+    } catch (e: unknown) {
+      setState({ loading: false, data: undefined, error: e as TError });
     }
   }, [ContractStorage, assets, ipfsGateWay, location]);
 
   React.useEffect(() => {
-    setState({ loading: true, data: undefined, error: undefined });
+    setState({ loading: true, data: state.data, error: undefined });
     fetchAssets();
-  }, [ContractStorage, assets, location, ipfsGateWay, fetchAssets]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contract, tezosToolkit, rpcURL, rpcPort, location, ipfsGateWay, ...assets]);
 
   return state;
 }
