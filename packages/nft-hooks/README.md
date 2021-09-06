@@ -1,6 +1,6 @@
-# `nft-hooks`
+# `@tezos-contrib/nft-hooks`
 
-> React hooks to fetch NFTs
+> React hooks to fetch NFTs on Tezos
 
 ## Installation
 
