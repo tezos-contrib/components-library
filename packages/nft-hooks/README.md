@@ -29,7 +29,7 @@ export default function App() {
   return (
     <div>
       {loading && <p>Loading...</p>}
-      {loading && data && data.map((item) => <p>{item.name}</p>)}
+      {!loading && data && data.map((item) => <p>{item.name}</p>)}
     </div>
   );
 }
