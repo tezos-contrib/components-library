@@ -2,6 +2,9 @@
 
 > React hooks to fetch NFTs on Tezos
 
+![npm (scoped)](https://img.shields.io/npm/v/@tezos-contrib/nft-hooks?style=for-the-badge)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@tezos-contrib/nft-hooks?style=for-the-badge)
+
 ## Installation
 
 - Npm
